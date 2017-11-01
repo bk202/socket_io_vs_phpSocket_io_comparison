@@ -9,13 +9,15 @@ require_once __DIR__ . '/vendor/autoload.php';
 use Workerman\Worker;
 use PHPSocketIO\SocketIO;
 
-$io = new SocketIO(3120);
-$io->on('connection', function($socket)use($io){
-    echo"new user connected\n";
-});
+// #### http worker ####
+$web = new Worker('http://0.0.0.0:3000');
+$web->onMessage = function($connection, $data)
+{
+    $content = file_get_contents(__DIR__ . '/index.html');
+    $connection->close($content);
+};
 
+// run all workers
 Worker::runAll();
-
-?>
 
 
