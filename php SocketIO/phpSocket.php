@@ -11,9 +11,18 @@ use PHPSocketIO\SocketIO;
 
 $io = new SocketIO(3120);
 $io->on('connection', function($socket)use($io){
-    $socket->on('newMessage', function($msg)use($io){
-        $io->emit('msgFromServer', $msg);
-    });
+    /*$time_pre = microtime(true);
+    $socket->on('testEvent', function($msg)use($socket, $time_pre){
+        //echo $msg . "\n";
+        if($msg == 220000){
+            $time_post = microtime(true);
+            echo $time_post - $time_pre;
+        }
+    });*/
+    for($i = 0; $i <= 10000; $i++){
+        $socket->emit("testEvent", $i);
+    }
+    echo "done\n";
 });
 
 // run all workers

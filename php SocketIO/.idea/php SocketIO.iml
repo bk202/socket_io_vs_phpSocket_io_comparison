@@ -18,9 +18,11 @@
       <library name="PHARS">
         <CLASSES>
           <root url="phar://C:/wamp64/bin/php/php5.6.31/pharcommand.phar/" />
+          <root url="phar://$MODULE_DIR$/phpunit-5.7.23.phar/" />
         </CLASSES>
         <SOURCES>
           <root url="phar://C:/wamp64/bin/php/php5.6.31/pharcommand.phar/" />
+          <root url="phar://$MODULE_DIR$/phpunit-5.7.23.phar/" />
         </SOURCES>
       </library>
     </orderEntry>
