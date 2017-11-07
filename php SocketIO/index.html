@@ -16,29 +16,23 @@
 <script src='https://cdn.bootcss.com/socket.io/2.0.3/socket.io.js'></script>
 <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 <script>
-    /*$(function(){
-        var socket = io('http://127.0.0.1:3120');
-        $('form').submit(function(){
-            socket.emit('newMessage', $('#m').val());
-            $('#m').val('');
-            return false;
-        });
-
-        socket.on('msgFromServer', function(msg){
-            $('#messages').append($('<li>').text(msg));
-        });
-    });*/
-    var socket = io('http://127.0.0.1:3120');
-    /*for(var i=0; i<=220000; i++){
-        socket.emit('testEvent', i);
-    }*/
-    var time_pre = Date.now();
-    socket.on('testEvent', function(data){
-        if(data == 10000){
-            var time_post = Date.now();
-            console.log((time_post - time_pre) * 0.001);
+    var totalUserCnt = 0;
+    var maxUsers = 200;
+    var cutOffEvent = 400;
+    var avgTime = [];
+    function newConnection(){
+        if(totalUserCnt < maxUsers){
+            totalUserCnt++;
+            var socket = io('http://127.0.0.1:3120');
+            for(var i=0; i<=cutOffEvent; i++){
+                socket.emit('testEvent');
+            }
+            console.log(totalUserCnt);
+            setTimeout(newConnection, 100);
         }
-    })
+    }
+
+    newConnection();
 </script>
 <body>
 <h1>Socket.IO Test</h1>

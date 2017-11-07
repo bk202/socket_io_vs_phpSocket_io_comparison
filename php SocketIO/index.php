@@ -14,7 +14,9 @@ $web = new Worker('http://0.0.0.0:3000');
 $web->onMessage = function($connection, $data)
 {
     $content = file_get_contents(__DIR__ . '/index.html');
-    $connection->close($content);
+    for($i=0; $i<=10; $i++){
+        $connection->send($content);
+    }
 };
 
 // run all workers

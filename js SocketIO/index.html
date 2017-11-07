@@ -16,35 +16,23 @@
 <script src="/socket.io/socket.io.js"></script>
 <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 <script>
-	/*$(function(){
-		$('form').submit(function(){
-			socket.emit('newMessage', $('#m').val());
-			$('#messages').append($('<li>').text($('#m').val()));
-			$('#m').val('');
-			return false;
-		});
-
-		socket.on('rcvMessage', function(msg){
-			$('#messages').append($('<li>').text(msg));
-		})
-		for(var i=0; i<=10000; i++){
-			var socket = io();
-			socket.emit('testEvent', i);
-		}
-	});*/
-	$(function(){
-		var socket = io();
-		/*for(var i=0; i<=220000; i++){
-			socket.emit('testEvent', i);
-		}*/
-		var time_pre = Date.now();
-		socket.on('testEvent', function(data){
-			if(data == 220000){
-				var time_post = Date.now();
-				console.log((time_post - time_pre) * 0.001);
+	var totalUserCnt = 0;
+    var maxUsers = 200;
+	var cutOffEvent = 20000;
+	var avgTime = [];
+    function newConnection(){
+        if(totalUserCnt < maxUsers){
+            totalUserCnt++;
+            var socket = io("http://localhost:3000", {multipliex: false});
+            for(var i=0; i<cutOffEvent; i++){
+                socket.emit('testEvent');
 			}
-		})
-	})
+			console.log(totalUserCnt);
+            setTimeout(newConnection, 100);
+		}
+    }
+
+    newConnection();
 </script>
 <body>
 	<h1>Socket.IO Test</h1>

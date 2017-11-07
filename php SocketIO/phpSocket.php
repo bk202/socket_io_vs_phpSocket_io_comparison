@@ -9,20 +9,25 @@ require_once __DIR__ . '/vendor/autoload.php';
 use Workerman\Worker;
 use PHPSocketIO\SocketIO;
 
+$userCnt = 0;
+$maxUserCnt = 200;
+$clientCutOffEvent = 400;
+$cutOffEvent = $maxUserCnt * $clientCutOffEvent;
 $io = new SocketIO(3120);
-$io->on('connection', function($socket)use($io){
-    /*$time_pre = microtime(true);
-    $socket->on('testEvent', function($msg)use($socket, $time_pre){
-        //echo $msg . "\n";
-        if($msg == 220000){
+$eventCnt = 0;
+$time_pre = microtime(true);
+$io->on('connection', function($socket)use($io, $userCnt, $maxUserCnt, $cutOffEvent, $time_pre, &$eventCnt){
+    $userCnt++;
+    if($userCnt == $maxUserCnt){
+        echo "Reached max user count!\n";
+    }
+    $socket->on('testEvent', function()use($socket, $cutOffEvent, &$eventCnt, $time_pre){
+        $eventCnt++;
+        if($eventCnt == $cutOffEvent){
             $time_post = microtime(true);
             echo $time_post - $time_pre;
         }
-    });*/
-    for($i = 0; $i <= 10000; $i++){
-        $socket->emit("testEvent", $i);
-    }
-    echo "done\n";
+    });
 });
 
 // run all workers
