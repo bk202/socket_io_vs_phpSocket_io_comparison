@@ -16,18 +16,29 @@
 <script src='https://cdn.bootcss.com/socket.io/2.0.3/socket.io.js'></script>
 <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 <script>
+    var info = {
+        uid: 0,
+        timeStamp: 0
+    };
+
     var totalUserCnt = 0;
     var maxUsers = 200;
-    var cutOffEvent = 400;
-    var avgTime = [];
     function newConnection(){
         if(totalUserCnt < maxUsers){
             totalUserCnt++;
-            var socket = io('http://127.0.0.1:3120');
-            for(var i=0; i<=cutOffEvent; i++){
-                socket.emit('testEvent');
-            }
             console.log(totalUserCnt);
+            var socket = io('http://127.0.0.1:80');
+            socket.on('generateUid', function(uid){
+                var today = new Date(Date.now());
+                info.uid = uid;
+                info.timeStamp = today.getFullYear() + "/" + (today.getMonth() + 1) + "/" + today.getDate() + "-" + today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds() + ":" + today.getMilliseconds();
+                info.miliseconds = today.getMilliseconds();
+                socket.emit('sendInfo', JSON.stringify(info));
+            });
+
+            socket.on('returnInfo', function(returnResponse){
+                console.log(returnResponse);
+            });
             setTimeout(newConnection, 100);
         }
     }

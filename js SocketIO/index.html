@@ -16,20 +16,25 @@
 <script src="/socket.io/socket.io.js"></script>
 <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 <script>
-	var totalUserCnt = 0;
+    function emitMessage(socket){
+        return function(){
+            socket.emit('testEvent');
+            setTimeout(emitMessage(socket), 1000);
+        }
+    }
+
+    var totalUserCnt = 0;
     var maxUsers = 200;
-	var cutOffEvent = 20000;
-	var avgTime = [];
+    var cutOffEvent = 400;
+    var avgTime = [];
     function newConnection(){
         if(totalUserCnt < maxUsers){
             totalUserCnt++;
+            console.log(totalUserCnt);
             var socket = io("http://localhost:3000", {multipliex: false});
-            for(var i=0; i<cutOffEvent; i++){
-                socket.emit('testEvent');
-			}
-			console.log(totalUserCnt);
+            setTimeout(emitMessage(socket), 1000);
             setTimeout(newConnection, 100);
-		}
+        }
     }
 
     newConnection();

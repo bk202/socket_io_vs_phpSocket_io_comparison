@@ -10,7 +10,7 @@ use Workerman\Worker;
 use PHPSocketIO\SocketIO;
 
 // #### http worker ####
-$web = new Worker('http://0.0.0.0:3000');
+$web = new Worker('http://0.0.0.0:2022');
 $web->onMessage = function($connection, $data)
 {
     $content = file_get_contents(__DIR__ . '/index.html');

@@ -13,20 +13,20 @@ $userCnt = 0;
 $maxUserCnt = 200;
 $clientCutOffEvent = 400;
 $cutOffEvent = $maxUserCnt * $clientCutOffEvent;
-$io = new SocketIO(3120);
+$io = new SocketIO(80);
 $eventCnt = 0;
-$time_pre = microtime(true);
-$io->on('connection', function($socket)use($io, $userCnt, $maxUserCnt, $cutOffEvent, $time_pre, &$eventCnt){
-    $userCnt++;
-    if($userCnt == $maxUserCnt){
-        echo "Reached max user count!\n";
-    }
-    $socket->on('testEvent', function()use($socket, $cutOffEvent, &$eventCnt, $time_pre){
-        $eventCnt++;
-        if($eventCnt == $cutOffEvent){
-            $time_post = microtime(true);
-            echo $time_post - $time_pre;
-        }
+$lastRecordedTime = microtime(true);
+$uid = 0;
+$io->on('connection', function($socket)use($io, &$userCnt, $maxUserCnt, $cutOffEvent, $lastRecordedTime, &$eventCnt, &$uid){
+    $socket->emit('generateUid', $uid++);
+
+    $socket->on('sendInfo', function($info)use($socket){
+        $decoded = json_decode($info, true);
+        $returnString = (string)$decoded['uid'] ." : ". (string)$decoded['timeStamp'] . "\n";
+        $returnResponse = ["s" => $returnString];
+
+        file_put_contents("log.txt", "s: " . $returnResponse["s"], FILE_APPEND);
+        $socket->emit('returnInfo', $returnResponse);
     });
 });
 
