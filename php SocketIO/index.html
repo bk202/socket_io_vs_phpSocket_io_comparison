@@ -31,8 +31,8 @@
             socket.on('generateUid', function(uid){
                 var today = new Date(Date.now());
                 info.uid = uid;
-                info.timeStamp = today.getFullYear() + "/" + (today.getMonth() + 1) + "/" + today.getDate() + "-" + today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds() + ":" + today.getMilliseconds();
-                info.miliseconds = today.getMilliseconds();
+                info.timeStamp = today.getFullYear() + "/" + (today.getMonth() + 1) + "/" + today.getDate() + "-" + today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds() + "." + today.getMilliseconds();
+                info.milliseconds = Date.now();
                 socket.emit('sendInfo', JSON.stringify(info));
             });
 
